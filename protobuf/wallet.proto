@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+option go_package = "./protobuf/wallet";
+package dapplink.wallet;
+
+message PublicKey {
+    string compress_pubkey = 1;
+    string decompress_pubkey = 2;
+}
+
+message SupportSignWayRequest{
+  string consumer_token = 1;
+  string type = 2;
+}
+
+message SupportSignWayResponse {
+  string code = 1;
+  string msg = 2;
+  bool support = 3;
+}
+
+message ExportPublicKeyRequest {
+  string consumer_token = 1;
+  string type = 2;
+  uint64 number = 3;
+}
+
+message ExportPublicKeyResponse {
+  string code = 1;
+  string msg = 2;
+  repeated PublicKey public_key = 3;
+}
+
+message SignTxMessageRequest {
+  string consumer_token = 1;
+  string public_key = 2;
+  string message_hash = 3;
+}
+
+message SignTxMessageResponse {
+  string code = 1;
+  string msg = 2;
+  string signature = 3;
+}
+
+service WalletService {
+  rpc getSupportSignWay(SupportSignWayRequest) returns (SupportSignWayResponse) {}
+  rpc exportPublicKeyList(ExportPublicKeyRequest) returns (ExportPublicKeyResponse) {}
+  rpc signTxMessage(SignTxMessageRequest) returns (SignTxMessageResponse) {}
+}
