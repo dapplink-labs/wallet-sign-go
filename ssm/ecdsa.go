@@ -24,7 +24,7 @@ func CreateECDSAKeyPair() (string, string, string, error) {
 	return priKeyStr, pubKeyStr, decPubkeyStr, nil
 }
 
-func SignMessage(privKey string, txMsg string) (string, error) {
+func SignECDSAMessage(privKey string, txMsg string) (string, error) {
 	hash := common.HexToHash(txMsg)
 	fmt.Println(hash.Hex())
 	privByte, err := hex.DecodeString(privKey)
@@ -45,7 +45,7 @@ func SignMessage(privKey string, txMsg string) (string, error) {
 	return hex.EncodeToString(signatureByte), nil
 }
 
-func VerifySign(pubKey, msgHash, sig string) bool {
+func VerifyECDSASign(pubKey, msgHash, sig string) bool {
 	publicKey, _ := hex.DecodeString(pubKey)
 	messageHash, _ := hex.DecodeString(msgHash)
 	signature, _ := hex.DecodeString(sig)

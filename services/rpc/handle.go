@@ -71,7 +71,7 @@ func (s *RpcServer) SignTxMessage(ctx context.Context, in *wallet.SignTxMessageR
 	if !isOk {
 		return nil, errors.New("get private key by public key fail")
 	}
-	signature, err := ssm.SignMessage(privKey, in.MessageHash)
+	signature, err := ssm.SignECDSAMessage(privKey, in.MessageHash)
 	if err != nil {
 		return nil, err
 	}
