@@ -3,8 +3,6 @@ package ssm
 import (
 	"fmt"
 	"testing"
-
-	"github.com/ethereum/go-ethereum/common"
 )
 
 func TestCreateECDSAKeyPair(t *testing.T) {
@@ -15,9 +13,9 @@ func TestCreateECDSAKeyPair(t *testing.T) {
 }
 
 func TestSignMessage(t *testing.T) {
-	privKey := "f81de14d837d72c236b8e80ae55a43ffe81548e206736f59494cf035eaf4144e"
-	message := common.Hash{}.String()
-	signature, err := SignEdDSAMessage(privKey, message)
+	privKey := "960014c429fc4afe27ce42a026a6f51d39f744b2b589322633f11310942d81b2"
+	message := "0xf6b0ccfd4c046b06fdca66537a7374e510cad44ca01c1b6364ec6bf8f879b019"
+	signature, err := SignECDSAMessage(privKey, message)
 	if err != nil {
 		fmt.Println("sign tx fail")
 	}
