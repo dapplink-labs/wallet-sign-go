@@ -35,14 +35,28 @@ func (s *RpcServer) ExportPublicKeyList(ctx context.Context, in *wallet.ExportPu
 			Msg:  "Number must be less than 100000",
 		}, nil
 	}
+
 	var keyList []leveldb.Key
 	var retKeyList []*wallet.PublicKey
+
 	for counter := 0; counter <= int(in.Number); counter++ {
-		priKeyStr, pubKeyStr, decPubkeyStr, err := ssm.CreateECDSAKeyPair()
+		var priKeyStr, pubKeyStr, decPubkeyStr string
+		var err error
+
+		switch in.Type {
+		case "ecdsa":
+			priKeyStr, pubKeyStr, decPubkeyStr, err = ssm.CreateECDSAKeyPair()
+		case "eddsa":
+			priKeyStr, pubKeyStr, err = ssm.CreateEdDSAKeyPair()
+			decPubkeyStr = pubKeyStr
+		default:
+			return nil, errors.New("unsupported key type")
+		}
 		if err != nil {
 			log.Error("create key pair fail", "err", err)
 			return nil, err
 		}
+
 		keyItem := leveldb.Key{
 			PrivateKey:     priKeyStr,
 			CompressPubkey: pubKeyStr,
@@ -71,7 +85,19 @@ func (s *RpcServer) SignTxMessage(ctx context.Context, in *wallet.SignTxMessageR
 	if !isOk {
 		return nil, errors.New("get private key by public key fail")
 	}
-	signature, err := ssm.SignECDSAMessage(privKey, in.MessageHash)
+
+	var signature string
+	var err error
+
+	switch in.Type {
+	case "ecdsa":
+		signature, err = ssm.SignECDSAMessage(privKey, in.MessageHash)
+	case "eddsa":
+		signature, err = ssm.SignEdDSAMessage(privKey, in.MessageHash)
+	default:
+		return nil, errors.New("unsupported key type")
+	}
+
 	if err != nil {
 		return nil, err
 	}
