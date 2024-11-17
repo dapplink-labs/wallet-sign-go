@@ -3,6 +3,7 @@ package rpc
 import (
 	"context"
 	"fmt"
+	"github.com/dapplink-labs/wallet-sign-go/hsm"
 	"net"
 	"sync/atomic"
 
@@ -20,11 +21,15 @@ const MaxRecvMessageSize = 1024 * 1024 * 30000
 type RpcServerConfig struct {
 	GrpcHostname string
 	GrpcPort     int
+	KeyPath      string
+	KeyName      string
+	HsmEnable    bool
 }
 
 type RpcServer struct {
 	*RpcServerConfig
-	db *leveldb.Keys
+	db        *leveldb.Keys
+	HsmClient *hsm.HsmClient
 
 	wallet.UnimplementedWalletServiceServer
 	stopped atomic.Bool
@@ -40,9 +45,14 @@ func (s *RpcServer) Stopped() bool {
 }
 
 func NewRpcServer(db *leveldb.Keys, config *RpcServerConfig) (*RpcServer, error) {
+	hsmClient, err := hsm.NewHSMClient(context.Background(), config.KeyPath, config.KeyName)
+	if err != nil {
+		log.Error("new hsm client fail", "err", err)
+	}
 	return &RpcServer{
 		RpcServerConfig: config,
 		db:              db,
+		HsmClient:       hsmClient,
 	}, nil
 }
 

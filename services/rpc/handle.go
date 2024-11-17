@@ -97,7 +97,6 @@ func (s *RpcServer) SignTxMessage(ctx context.Context, in *wallet.SignTxMessageR
 	default:
 		return nil, errors.New("unsupported key type")
 	}
-
 	if err != nil {
 		return nil, err
 	}

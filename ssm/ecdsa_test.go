@@ -13,8 +13,9 @@ func TestCreateECDSAKeyPair(t *testing.T) {
 }
 
 func TestSignMessage(t *testing.T) {
-	privKey := "960014c429fc4afe27ce42a026a6f51d39f744b2b589322633f11310942d81b2"
-	message := "0xf6b0ccfd4c046b06fdca66537a7374e510cad44ca01c1b6364ec6bf8f879b019"
+	// 0x35096AD62E57e86032a3Bb35aDaCF2240d55421D
+	privKey := "fe13c8e55444107c32f50cca04965f9772fe4fd720ffedd30b347e541fe7a97c"
+	message := "0x3e4f9a460233ec33862da1ac3dabf5b32db01400fba166cdec40ad6dc735b4ab"
 	signature, err := SignECDSAMessage(privKey, message)
 	if err != nil {
 		fmt.Println("sign tx fail")

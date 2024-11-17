@@ -22,6 +22,9 @@ func runRpc(ctx *cli.Context, shutdown context.CancelCauseFunc) (cliapp.Lifecycl
 	grpcServerCfg := &rpc.RpcServerConfig{
 		GrpcHostname: cfg.RpcServer.Host,
 		GrpcPort:     cfg.RpcServer.Port,
+		KeyName:      cfg.KeyName,
+		KeyPath:      cfg.CredentialsFile,
+		HsmEnable:    cfg.HsmEnable,
 	}
 	db, err := leveldb.NewKeyStore(cfg.LevelDbPath)
 	if err != nil {

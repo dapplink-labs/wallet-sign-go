@@ -22,11 +22,6 @@ func SignEdDSAMessage(priKey string, txMsg string) (string, error) {
 	txMsgByte, _ := hex.DecodeString(txMsg)
 	signMsg := ed25519.Sign(privateKey, txMsgByte)
 
-	//publicKey := privateKey[32:]
-	//if !ed25519.Verify(publicKey, txMsgByte, signMsg) {
-	//	return "", fmt.Errorf("signature verification failed")
-	//}
-
 	return hex.EncodeToString(signMsg), nil
 }
 

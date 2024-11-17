@@ -7,8 +7,11 @@ import (
 )
 
 type Config struct {
-	LevelDbPath string
-	RpcServer   ServerConfig
+	LevelDbPath     string
+	RpcServer       ServerConfig
+	CredentialsFile string
+	KeyName         string
+	HsmEnable       bool
 }
 
 type ServerConfig struct {
@@ -18,7 +21,10 @@ type ServerConfig struct {
 
 func NewConfig(ctx *cli.Context) Config {
 	return Config{
-		LevelDbPath: ctx.String(flags.LevelDbPathFlag.Name),
+		LevelDbPath:     ctx.String(flags.LevelDbPathFlag.Name),
+		CredentialsFile: ctx.String(flags.CredentialsFileFlag.Name),
+		KeyName:         ctx.String(flags.KeyNameFlag.Name),
+		HsmEnable:       ctx.Bool(flags.HsmEnable.Name),
 		RpcServer: ServerConfig{
 			Host: ctx.String(flags.RpcHostFlag.Name),
 			Port: ctx.Int(flags.RpcPortFlag.Name),
