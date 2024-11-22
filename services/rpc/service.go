@@ -3,7 +3,6 @@ package rpc
 import (
 	"context"
 	"fmt"
-	"github.com/dapplink-labs/wallet-sign-go/hsm"
 	"net"
 	"sync/atomic"
 
@@ -12,6 +11,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
+	"github.com/dapplink-labs/wallet-sign-go/hsm"
 	"github.com/dapplink-labs/wallet-sign-go/leveldb"
 	"github.com/dapplink-labs/wallet-sign-go/protobuf/wallet"
 )
