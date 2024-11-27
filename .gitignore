@@ -23,3 +23,11 @@ go.work.sum
 
 # env file
 .idea
+
+# local database file
+data
+.data
+
+# local compiled file
+signature
+*.signature
