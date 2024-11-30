@@ -39,16 +39,16 @@ func (s *RpcServer) ExportPublicKeyList(ctx context.Context, in *wallet.ExportPu
 	var keyList []leveldb.Key
 	var retKeyList []*wallet.PublicKey
 
-	for counter := 0; counter <= int(in.Number); counter++ {
-		var priKeyStr, pubKeyStr, decPubkeyStr string
+	for counter := 0; counter < int(in.Number); counter++ {
+		var priKeyStr, pubKeyStr, compressPubkeyStr string
 		var err error
 
 		switch in.Type {
 		case "ecdsa":
-			priKeyStr, pubKeyStr, decPubkeyStr, err = ssm.CreateECDSAKeyPair()
+			priKeyStr, pubKeyStr, compressPubkeyStr, err = ssm.CreateECDSAKeyPair()
 		case "eddsa":
 			priKeyStr, pubKeyStr, err = ssm.CreateEdDSAKeyPair()
-			decPubkeyStr = pubKeyStr
+			compressPubkeyStr = pubKeyStr
 		default:
 			return nil, errors.New("unsupported key type")
 		}
@@ -58,12 +58,12 @@ func (s *RpcServer) ExportPublicKeyList(ctx context.Context, in *wallet.ExportPu
 		}
 
 		keyItem := leveldb.Key{
-			PrivateKey:     priKeyStr,
-			CompressPubkey: pubKeyStr,
+			PrivateKey: priKeyStr,
+			Pubkey:     pubKeyStr,
 		}
 		pukItem := &wallet.PublicKey{
-			CompressPubkey:   pubKeyStr,
-			DecompressPubkey: decPubkeyStr,
+			CompressPubkey: compressPubkeyStr,
+			Pubkey:         pubKeyStr,
 		}
 		retKeyList = append(retKeyList, pukItem)
 		keyList = append(keyList, keyItem)

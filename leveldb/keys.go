@@ -29,7 +29,7 @@ func (k *Keys) GetPrivKey(publicKey string) (string, bool) {
 
 func (k *Keys) StoreKeys(keyList []Key) bool {
 	for _, item := range keyList {
-		key := []byte(item.CompressPubkey)
+		key := []byte(item.Pubkey)
 		value := toBytes(item.PrivateKey)
 		err := k.db.Put(key, value)
 		if err != nil {
