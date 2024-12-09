@@ -17,11 +17,11 @@ func CreateECDSAKeyPair() (string, string, string, error) {
 	}
 	priKeyStr := hex.EncodeToString(crypto.FromECDSA(privateKey))
 	pubKeyStr := hex.EncodeToString(crypto.FromECDSAPub(&privateKey.PublicKey))
-	decPubkeyStr := hex.EncodeToString(crypto.CompressPubkey(&privateKey.PublicKey))
+	compressPubkeyStr := hex.EncodeToString(crypto.CompressPubkey(&privateKey.PublicKey))
 	if err != nil {
 		return "0x00", "0x00", "0x00", err
 	}
-	return priKeyStr, pubKeyStr, decPubkeyStr, nil
+	return priKeyStr, pubKeyStr, compressPubkeyStr, nil
 }
 
 func SignECDSAMessage(privKey string, txMsg string) (string, error) {

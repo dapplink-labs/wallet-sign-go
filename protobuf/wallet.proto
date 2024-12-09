@@ -5,7 +5,7 @@ package dapplink.wallet;
 
 message PublicKey {
     string compress_pubkey = 1;
-    string decompress_pubkey = 2;
+    string pubkey = 2;
 }
 
 message SupportSignWayRequest{
