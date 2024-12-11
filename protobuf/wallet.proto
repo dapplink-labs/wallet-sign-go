@@ -3,6 +3,11 @@ syntax = "proto3";
 option go_package = "./protobuf/wallet";
 package dapplink.wallet;
 
+enum ReturnCode{
+  ERROR = 0;
+  SUCCESS = 1;
+}
+
 message PublicKey {
     string compress_pubkey = 1;
     string pubkey = 2;
@@ -10,36 +15,39 @@ message PublicKey {
 
 message SupportSignWayRequest{
   string consumer_token = 1;
+  // CryptoType
   string type = 2;
 }
 
 message SupportSignWayResponse {
-  string code = 1;
+  ReturnCode Code = 1;
   string msg = 2;
   bool support = 3;
 }
 
 message ExportPublicKeyRequest {
   string consumer_token = 1;
+  // CryptoType
   string type = 2;
   uint64 number = 3;
 }
 
 message ExportPublicKeyResponse {
-  string code = 1;
+  ReturnCode Code = 1;
   string msg = 2;
   repeated PublicKey public_key = 3;
 }
 
 message SignTxMessageRequest {
   string consumer_token = 1;
+  // CryptoType
   string type = 2;
   string public_key = 3;
   string message_hash = 4;
 }
 
 message SignTxMessageResponse {
-  string code = 1;
+  ReturnCode Code = 1;
   string msg = 2;
   string signature = 3;
 }

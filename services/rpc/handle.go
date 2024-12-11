@@ -2,38 +2,44 @@ package rpc
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/pkg/errors"
 
 	"github.com/dapplink-labs/wallet-sign-go/leveldb"
+	"github.com/dapplink-labs/wallet-sign-go/protobuf"
 	"github.com/dapplink-labs/wallet-sign-go/protobuf/wallet"
 	"github.com/dapplink-labs/wallet-sign-go/ssm"
 )
 
 func (s *RpcServer) GetSupportSignWay(ctx context.Context, in *wallet.SupportSignWayRequest) (*wallet.SupportSignWayResponse, error) {
-	if in.Type == "ecdsa" || in.Type == "eddsa" {
-		return &wallet.SupportSignWayResponse{
-			Code:    strconv.Itoa(1),
-			Msg:     "Support this sign way",
-			Support: true,
-		}, nil
-	} else {
-		return &wallet.SupportSignWayResponse{
-			Code:    strconv.Itoa(0),
-			Msg:     "Do not support this sign way",
-			Support: false,
-		}, nil
+	resp := &wallet.SupportSignWayResponse{
+		Code: wallet.ReturnCode_ERROR,
 	}
+
+	cryptoType, err := protobuf.ParseTransactionType(in.Type)
+	if err != nil {
+		resp.Msg = "input type error"
+		return resp, nil
+	}
+	resp.Code = wallet.ReturnCode_SUCCESS
+	resp.Msg = "support this sign way = " + string(cryptoType)
+	resp.Support = true
+	return resp, nil
 }
 
 func (s *RpcServer) ExportPublicKeyList(ctx context.Context, in *wallet.ExportPublicKeyRequest) (*wallet.ExportPublicKeyResponse, error) {
+	resp := &wallet.ExportPublicKeyResponse{
+		Code: wallet.ReturnCode_ERROR,
+	}
+	cryptoType, err := protobuf.ParseTransactionType(in.Type)
+	if err != nil {
+		resp.Msg = "input type error"
+		return resp, nil
+	}
 	if in.Number > 10000 {
-		return &wallet.ExportPublicKeyResponse{
-			Code: strconv.Itoa(1),
-			Msg:  "Number must be less than 100000",
-		}, nil
+		resp.Msg = "Number must be less than 100000"
+		return resp, nil
 	}
 
 	var keyList []leveldb.Key
@@ -43,10 +49,10 @@ func (s *RpcServer) ExportPublicKeyList(ctx context.Context, in *wallet.ExportPu
 		var priKeyStr, pubKeyStr, compressPubkeyStr string
 		var err error
 
-		switch in.Type {
-		case "ecdsa":
+		switch cryptoType {
+		case protobuf.ECDSA:
 			priKeyStr, pubKeyStr, compressPubkeyStr, err = ssm.CreateECDSAKeyPair()
-		case "eddsa":
+		case protobuf.EDDSA:
 			priKeyStr, pubKeyStr, err = ssm.CreateEdDSAKeyPair()
 			compressPubkeyStr = pubKeyStr
 		default:
@@ -73,36 +79,43 @@ func (s *RpcServer) ExportPublicKeyList(ctx context.Context, in *wallet.ExportPu
 		log.Error("store keys fail", "isOk", isOk)
 		return nil, errors.New("store keys fail")
 	}
-	return &wallet.ExportPublicKeyResponse{
-		Code:      strconv.Itoa(1),
-		Msg:       "create keys success",
-		PublicKey: retKeyList,
-	}, nil
+	resp.Code = wallet.ReturnCode_SUCCESS
+	resp.Msg = "create keys success"
+	resp.PublicKey = retKeyList
+	return resp, nil
 }
 
 func (s *RpcServer) SignTxMessage(ctx context.Context, in *wallet.SignTxMessageRequest) (*wallet.SignTxMessageResponse, error) {
+	resp := &wallet.SignTxMessageResponse{
+		Code: wallet.ReturnCode_ERROR,
+	}
+	cryptoType, err := protobuf.ParseTransactionType(in.Type)
+	if err != nil {
+		resp.Msg = "input type error"
+		return resp, nil
+	}
+
 	privKey, isOk := s.db.GetPrivKey(in.PublicKey)
 	if !isOk {
 		return nil, errors.New("get private key by public key fail")
 	}
 
 	var signature string
-	var err error
+	var err2 error
 
-	switch in.Type {
-	case "ecdsa":
-		signature, err = ssm.SignECDSAMessage(privKey, in.MessageHash)
-	case "eddsa":
-		signature, err = ssm.SignEdDSAMessage(privKey, in.MessageHash)
+	switch cryptoType {
+	case protobuf.ECDSA:
+		signature, err2 = ssm.SignECDSAMessage(privKey, in.MessageHash)
+	case protobuf.EDDSA:
+		signature, err2 = ssm.SignEdDSAMessage(privKey, in.MessageHash)
 	default:
 		return nil, errors.New("unsupported key type")
 	}
-	if err != nil {
-		return nil, err
+	if err2 != nil {
+		return nil, err2
 	}
-	return &wallet.SignTxMessageResponse{
-		Code:      strconv.Itoa(1),
-		Msg:       "sign tx message success",
-		Signature: signature,
-	}, nil
+	resp.Msg = "sign tx message success"
+	resp.Signature = signature
+	resp.Code = wallet.ReturnCode_SUCCESS
+	return resp, nil
 }
