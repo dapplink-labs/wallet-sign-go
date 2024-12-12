@@ -28,7 +28,7 @@ var (
 		Name:     "rpc-port",
 		Usage:    "The port of the rpc",
 		EnvVars:  prefixEnvVars("RPC_PORT"),
-		Value:    8987,
+		Value:    8983,
 		Required: true,
 	}
 
@@ -62,8 +62,8 @@ var optionalFlags = []cli.Flag{
 	HsmEnable,
 }
 
+var Flags []cli.Flag
+
 func init() {
 	Flags = append(requireFlags, optionalFlags...)
 }
-
-var Flags []cli.Flag
