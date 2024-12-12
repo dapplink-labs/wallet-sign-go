@@ -55,10 +55,6 @@ grpcurl -plaintext -d '{
     {
       "compress_pubkey": "042aa1b0dcb48cb74a1027285bb5594ff6b2e65a2b6cc2e5ec91b71cb5e60d071e7e3eabd1efbc84a59c8c68f00c78690c55d4086f875511905d47a07780f966a5",
       "decompress_pubkey": "032aa1b0dcb48cb74a1027285bb5594ff6b2e65a2b6cc2e5ec91b71cb5e60d071e"
-    },
-    {
-      "compress_pubkey": "04f3a03196755172fe1adb33dec9e46373a4a6b35e021fb78cae459f419e0af10db8a0679dfabb84b1eb3fcf5accff09d0055ccead937a9cc4fe171c94feaaa44e",
-      "decompress_pubkey": "02f3a03196755172fe1adb33dec9e46373a4a6b35e021fb78cae459f419e0af10d"
     }
   ]
 }

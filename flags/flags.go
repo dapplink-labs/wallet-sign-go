@@ -2,10 +2,10 @@ package flags
 
 import "github.com/urfave/cli/v2"
 
-const evnVarPrefix = "SIGNATURE"
+const envVarPrefix = "SIGNATURE"
 
 func prefixEnvVars(name string) []string {
-	return []string{evnVarPrefix + "_" + name}
+	return []string{envVarPrefix + "_" + name}
 }
 
 var (
