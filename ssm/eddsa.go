@@ -12,7 +12,7 @@ func CreateEdDSAKeyPair() (string, string, error) {
 	publicKey, privateKey, err := ed25519.GenerateKey(rand.Reader)
 	if err != nil {
 		log.Error("create key pair fail:", "err", err)
-		return "0x00", "0x00", nil
+		return EmptyHexString, EmptyHexString, nil
 	}
 	return hex.EncodeToString(privateKey), hex.EncodeToString(publicKey), nil
 }
