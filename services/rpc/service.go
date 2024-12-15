@@ -16,7 +16,7 @@ import (
 	"github.com/dapplink-labs/wallet-sign-go/protobuf/wallet"
 )
 
-const MaxRecvMessageSize = 1024 * 1024 * 30000
+const MaxReceivedMessageSize = 1024 * 1024 * 30000
 
 type RpcServerConfig struct {
 	GrpcHostname string
@@ -65,7 +65,7 @@ func (s *RpcServer) Start(ctx context.Context) error {
 			log.Error("Could not start tcp listener. ")
 		}
 
-		opt := grpc.MaxRecvMsgSize(MaxRecvMessageSize)
+		opt := grpc.MaxRecvMsgSize(MaxReceivedMessageSize)
 
 		gs := grpc.NewServer(
 			opt,

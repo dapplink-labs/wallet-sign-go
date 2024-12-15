@@ -6,17 +6,17 @@ import (
 	"github.com/dapplink-labs/wallet-sign-go/flags"
 )
 
+type ServerConfig struct {
+	Host string
+	Port int
+}
+
 type Config struct {
 	LevelDbPath     string
 	RpcServer       ServerConfig
 	CredentialsFile string
 	KeyName         string
 	HsmEnable       bool
-}
-
-type ServerConfig struct {
-	Host string
-	Port int
 }
 
 func NewConfig(ctx *cli.Context) Config {

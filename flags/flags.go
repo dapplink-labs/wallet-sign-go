@@ -9,14 +9,6 @@ func prefixEnvVars(name string) []string {
 }
 
 var (
-	// LevelDbPathFlag Database
-	LevelDbPathFlag = &cli.StringFlag{
-		Name:    "master-db-host",
-		Usage:   "The path of the leveldb",
-		EnvVars: prefixEnvVars("LEVEL_DB_PATH"),
-		Value:   "./",
-	}
-
 	// RpcHostFlag RPC Service
 	RpcHostFlag = &cli.StringFlag{
 		Name:     "rpc-host",
@@ -31,12 +23,12 @@ var (
 		Value:    8983,
 		Required: true,
 	}
-
-	HsmEnable = &cli.BoolFlag{
-		Name:    "hsm-enable",
-		Usage:   "Hsm enable",
-		EnvVars: prefixEnvVars("HSM_ENABLE"),
-		Value:   false,
+	// LevelDbPathFlag Database
+	LevelDbPathFlag = &cli.StringFlag{
+		Name:    "master-db-host",
+		Usage:   "The path of the leveldb",
+		EnvVars: prefixEnvVars("LEVEL_DB_PATH"),
+		Value:   "./",
 	}
 	CredentialsFileFlag = &cli.StringFlag{
 		Name:    "credentials-file",
@@ -47,6 +39,12 @@ var (
 		Name:    "key-name",
 		Usage:   "The key name of cloud hsm",
 		EnvVars: prefixEnvVars("KEY_NAME"),
+	}
+	HsmEnable = &cli.BoolFlag{
+		Name:    "hsm-enable",
+		Usage:   "Hsm enable",
+		EnvVars: prefixEnvVars("HSM_ENABLE"),
+		Value:   false,
 	}
 )
 

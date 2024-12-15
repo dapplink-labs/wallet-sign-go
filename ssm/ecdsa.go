@@ -18,9 +18,7 @@ func CreateECDSAKeyPair() (string, string, string, error) {
 	priKeyStr := hex.EncodeToString(crypto.FromECDSA(privateKey))
 	pubKeyStr := hex.EncodeToString(crypto.FromECDSAPub(&privateKey.PublicKey))
 	compressPubkeyStr := hex.EncodeToString(crypto.CompressPubkey(&privateKey.PublicKey))
-	if err != nil {
-		return "0x00", "0x00", "0x00", err
-	}
+
 	return priKeyStr, pubKeyStr, compressPubkeyStr, nil
 }
 
