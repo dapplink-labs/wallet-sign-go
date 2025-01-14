@@ -29,5 +29,6 @@ data
 .data
 
 # local compiled file
+./signature
 /signature
-*.signature
+
