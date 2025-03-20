@@ -10,13 +10,16 @@ message PublicKey {
 
 message SupportSignWayRequest{
   string consumer_token = 1;
-  string type = 2;
+}
+
+message SignWay {
+  string schema = 1;
 }
 
 message SupportSignWayResponse {
   string code = 1;
   string msg = 2;
-  bool support = 3;
+  repeated SignWay sign_way = 3;
 }
 
 message ExportPublicKeyRequest {

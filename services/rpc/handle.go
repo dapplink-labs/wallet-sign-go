@@ -13,19 +13,15 @@ import (
 )
 
 func (s *RpcServer) GetSupportSignWay(ctx context.Context, in *wallet.SupportSignWayRequest) (*wallet.SupportSignWayResponse, error) {
-	if in.Type == "ecdsa" || in.Type == "eddsa" {
-		return &wallet.SupportSignWayResponse{
-			Code:    strconv.Itoa(1),
-			Msg:     "Support this sign way",
-			Support: true,
-		}, nil
-	} else {
-		return &wallet.SupportSignWayResponse{
-			Code:    strconv.Itoa(0),
-			Msg:     "Do not support this sign way",
-			Support: false,
-		}, nil
-	}
+	var signWay []*wallet.SignWay
+	signWay = append(signWay, &wallet.SignWay{Schema: "ecdsa"})
+	signWay = append(signWay, &wallet.SignWay{Schema: "eddsa"})
+	return &wallet.SupportSignWayResponse{
+		Code:    strconv.Itoa(0),
+		Msg:     "get sign way success",
+		SignWay: signWay,
+	}, nil
+
 }
 
 func (s *RpcServer) ExportPublicKeyList(ctx context.Context, in *wallet.ExportPublicKeyRequest) (*wallet.ExportPublicKeyResponse, error) {
