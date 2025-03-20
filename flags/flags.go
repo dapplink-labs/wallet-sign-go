@@ -2,21 +2,13 @@ package flags
 
 import "github.com/urfave/cli/v2"
 
-const evnVarPrefix = "SIGNATURE"
+const envVarPrefix = "SIGNATURE"
 
 func prefixEnvVars(name string) []string {
-	return []string{evnVarPrefix + "_" + name}
+	return []string{envVarPrefix + "_" + name}
 }
 
 var (
-	// LevelDbPathFlag Database
-	LevelDbPathFlag = &cli.StringFlag{
-		Name:    "master-db-host",
-		Usage:   "The path of the leveldb",
-		EnvVars: prefixEnvVars("LEVEL_DB_PATH"),
-		Value:   "./",
-	}
-
 	// RpcHostFlag RPC Service
 	RpcHostFlag = &cli.StringFlag{
 		Name:     "rpc-host",
@@ -28,15 +20,15 @@ var (
 		Name:     "rpc-port",
 		Usage:    "The port of the rpc",
 		EnvVars:  prefixEnvVars("RPC_PORT"),
-		Value:    8987,
+		Value:    8983,
 		Required: true,
 	}
-
-	HsmEnable = &cli.BoolFlag{
-		Name:    "hsm-enable",
-		Usage:   "Hsm enable",
-		EnvVars: prefixEnvVars("HSM_ENABLE"),
-		Value:   false,
+	// LevelDbPathFlag Database
+	LevelDbPathFlag = &cli.StringFlag{
+		Name:    "master-db-host",
+		Usage:   "The path of the leveldb",
+		EnvVars: prefixEnvVars("LEVEL_DB_PATH"),
+		Value:   "./",
 	}
 	CredentialsFileFlag = &cli.StringFlag{
 		Name:    "credentials-file",
@@ -47,6 +39,12 @@ var (
 		Name:    "key-name",
 		Usage:   "The key name of cloud hsm",
 		EnvVars: prefixEnvVars("KEY_NAME"),
+	}
+	HsmEnable = &cli.BoolFlag{
+		Name:    "hsm-enable",
+		Usage:   "Hsm enable",
+		EnvVars: prefixEnvVars("HSM_ENABLE"),
+		Value:   false,
 	}
 )
 
@@ -62,8 +60,8 @@ var optionalFlags = []cli.Flag{
 	HsmEnable,
 }
 
+var Flags []cli.Flag
+
 func init() {
 	Flags = append(requireFlags, optionalFlags...)
 }
-
-var Flags []cli.Flag

@@ -14,15 +14,6 @@ var DefaultInterruptSignals = []os.Signal{
 	syscall.SIGQUIT,
 }
 
-func BlockOnInterrupts(signals ...os.Signal) {
-	if len(signals) == 0 {
-		signals = DefaultInterruptSignals
-	}
-	interruptChannel := make(chan os.Signal, 1)
-	signal.Notify(interruptChannel, signals...)
-	<-interruptChannel
-}
-
 func BlockOnInterruptsContext(ctx context.Context, signals ...os.Signal) {
 	if len(signals) == 0 {
 		signals = DefaultInterruptSignals
@@ -51,6 +42,8 @@ func (c *interruptCatcher) Block(ctx context.Context) {
 	}
 }
 
+type BlockFn func(ctx context.Context)
+
 func WithInterruptBlocker(ctx context.Context) context.Context {
 	if ctx.Value(blockerContextKey) != nil { // already has an interrupt handler
 		return ctx
@@ -63,34 +56,32 @@ func WithInterruptBlocker(ctx context.Context) context.Context {
 	return context.WithValue(ctx, blockerContextKey, BlockFn(catcher.Block))
 }
 
-func WithBlocker(ctx context.Context, fn BlockFn) context.Context {
-	return context.WithValue(ctx, blockerContextKey, fn)
-}
+//func WithBlocker(ctx context.Context, fn BlockFn) context.Context {
+//	return context.WithValue(ctx, blockerContextKey, fn)
+//}
 
-type BlockFn func(ctx context.Context)
+//func BlockerFromContext(ctx context.Context) BlockFn {
+//	v := ctx.Value(blockerContextKey)
+//	if v == nil {
+//		return nil
+//	}
+//	return v.(BlockFn)
+//}
 
-func BlockerFromContext(ctx context.Context) BlockFn {
-	v := ctx.Value(blockerContextKey)
-	if v == nil {
-		return nil
-	}
-	return v.(BlockFn)
-}
-
-func CancelOnInterrupt(ctx context.Context) context.Context {
-	inner, cancel := context.WithCancel(ctx)
-
-	blockOnInterrupt := BlockerFromContext(ctx)
-	if blockOnInterrupt == nil {
-		blockOnInterrupt = func(ctx context.Context) {
-			BlockOnInterruptsContext(ctx) // default signals
-		}
-	}
-
-	go func() {
-		blockOnInterrupt(ctx)
-		cancel()
-	}()
-
-	return inner
-}
+//func CancelOnInterrupt(ctx context.Context) context.Context {
+//	inner, cancel := context.WithCancel(ctx)
+//
+//	blockOnInterrupt := BlockerFromContext(ctx)
+//	if blockOnInterrupt == nil {
+//		blockOnInterrupt = func(ctx context.Context) {
+//			BlockOnInterruptsContext(ctx) // default signals
+//		}
+//	}
+//
+//	go func() {
+//		blockOnInterrupt(ctx)
+//		cancel()
+//	}()
+//
+//	return inner
+//}

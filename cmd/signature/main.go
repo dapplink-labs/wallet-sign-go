@@ -4,8 +4,9 @@ import (
 	"context"
 	"os"
 
-	"github.com/dapplink-labs/wallet-sign-go/common/opio"
 	"github.com/ethereum/go-ethereum/log"
+
+	"github.com/dapplink-labs/wallet-sign-go/common/opio"
 )
 
 var (
