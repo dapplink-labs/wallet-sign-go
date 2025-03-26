@@ -18,8 +18,16 @@ func CreateEdDSAKeyPair() (string, string, error) {
 }
 
 func SignEdDSAMessage(priKey string, txMsg string) (string, error) {
-	privateKey, _ := hex.DecodeString(priKey)
-	txMsgByte, _ := hex.DecodeString(txMsg)
+	privateKey, err := hex.DecodeString(priKey)
+	if err != nil {
+		log.Error("Decode private key string fail", "err", err)
+		return "", err
+	}
+	txMsgByte, err := hex.DecodeString(txMsg)
+	if err != nil {
+		log.Error("Decode tx message fail", "err", err)
+		return "", err
+	}
 	signMsg := ed25519.Sign(privateKey, txMsgByte)
 
 	return hex.EncodeToString(signMsg), nil
